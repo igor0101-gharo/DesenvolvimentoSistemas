@@ -21,5 +21,6 @@ public class NotaFiscal {
         System.out.printf("---------- NOTA FISCAL ----------%nCliente: %s%nProduto: %s%nQuantidade: %d%nValor Unitário: R$%.2f%nTotal: R$%.2f%n---------------------------------",
             nome,nome_produto,quantidade,valor_unit,valor_total
         );
+        sc.close();
     }
 }

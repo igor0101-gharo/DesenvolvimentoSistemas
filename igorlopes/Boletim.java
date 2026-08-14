@@ -14,5 +14,6 @@ public class Boletim {
         double media = (nota1+nota2)/2;
 
         System.out.printf("Aluno: %s%nNota 1: %.2f%nNota 2: %.2f%nMédia: %.2f%n",nome,nota1,nota2,media);
+        sc.close();
     }
 }
