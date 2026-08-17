@@ -28,6 +28,7 @@ public class AtividadeCondicional06 {
         }else{
             System.out.printf("Operador inválido");
         }
+        sc.close();
 
     }
 }
