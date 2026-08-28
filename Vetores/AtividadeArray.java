@@ -6,12 +6,13 @@ public class AtividadeArray {
         int escolha = 98;
 
         String[] produtos = new String[5];
-        int[] qtd = new int[5];
-        int disponivel = 5;
+        int[] quantidade = new int[5];
+        int tam = 5;
+        int qtd = 0;
 
 
         while (escolha !=6) {
-        System.out.println("===MENU===");    
+        System.out.println("\n\n===MENU===");    
         System.out.println("1-Cadastrar Produto");    
         System.out.println("2-Listar Produtos");    
         System.out.println("3-Pesquisar Produto");    
@@ -23,60 +24,103 @@ public class AtividadeArray {
 
         switch (escolha) {
             case 1:
-            if (disponivel==5){
-                System.out.println("Digite o nome do produto: ");
-                produtos[0] = sc.next();
-                System.out.println("Digite a quantidade do produto: ");
-                qtd[0] = sc.nextInt();
-                disponivel= disponivel-1;
-            }else if(disponivel==4){
-                System.out.println("Digite o nome do produto: ");
-                produtos[1] = sc.next();
-                System.out.println("Digite a quantidade do produto: ");
-                qtd[1] = sc.nextInt();
-                disponivel= disponivel-1;
-                
-            }else if(disponivel==3){
-                System.out.println("Digite o nome do produto: ");
-                produtos[2] = sc.next();
-                System.out.println("Digite a quantidade do produto: ");
-                qtd[2] = sc.nextInt();
-                disponivel= disponivel-1;
-                
-            }else if(disponivel==2){
-                System.out.println("Digite o nome do produto: ");
-                produtos[3] = sc.next();
-                System.out.println("Digite a quantidade do produto: ");
-                qtd[3] = sc.nextInt();
-                disponivel= disponivel-1;
-                
-            }else if(disponivel==1){
-                System.out.println("Digite o nome do produto: ");
-                produtos[4] = sc.next();
-                System.out.println("Digite a quantidade do produto: ");
-                qtd[4] = sc.nextInt();
-                disponivel= disponivel-1;
+                if (qtd == tam){
+                    System.out.println("Todos os espaços para produtos estão ocupados.");
 
-            }else if(disponivel==0)
+                }else{
+                    System.out.println("Digite o nome do produto que você quer cadastrar: ");
+                    produtos[qtd] = sc.next();
+                    System.out.println("Digite a quantidade do produto que você quer cadastrar: ");
+                    quantidade[qtd] = sc.nextInt();
+                    System.out.println("Produto cadastrado com sucesso.");
+                    qtd++;
+
+                }
+
             break;
         
             case 2:
+                if (qtd == 0){
+                    System.out.println("Não há produtos cadastrados.");
+                }else{
+                    System.out.println("======Lista de produtos=====");
+                    for(int i=0;i<qtd;i++){
+                        System.out.println((i+1)+" - "+produtos[i]+" | Quantidade: "+quantidade[i]);
+                    }
+                }
             
             break;
         
             case 3:
+                System.out.println("Informe o nome: ");
+                String busca=sc.next();
+
+                int posbusca=-1;
+                for (int i=0;i<qtd;i++){
+                    if(produtos[i].equalsIgnoreCase(busca));
+                    posbusca = i;
+                    break;
+                }
+                if(posbusca == -1){
+                    System.out.println("Produto não encontrado");
+
+                }else{
+                    System.out.println("Encontrado: "+produtos[posbusca]+ " - Estoque: " + quantidade[posbusca]);
+                }
             
             break;
         
             case 4:
-            
+                System.out.println("informe o nome para alterar: ");
+                String nomeAlterar = sc.next();
+
+                int posAlt = -1;
+                for(int i=0;i<qtd;i++){
+                    if(produtos[i].equalsIgnoreCase(nomeAlterar)){
+                        posAlt=i;
+                        break;
+                    }
+                }
+                if (posAlt==-1){
+                    System.out.println("Produto não econtrado.");
+                }else{
+                    System.out.println("Novo nome: ");
+                    produtos[posAlt] = sc.next();
+                    System.out.println("Nova quantidade: ");
+                    quantidade[posAlt] = sc.nextInt();
+
+                    System.out.println("Produto alterado com sucesso.");
+
+                }
             break;
         
             case 5:
-            
+                System.out.println("Informe o nome para remover: ");
+                String nomeRemover = sc.next();
+
+                int posremover= -1;
+                for(int i=0;i<qtd;i++){
+                    if (produtos[i].equalsIgnoreCase(nomeRemover)){
+                        posremover = i;
+                        break;
+                    }
+                }
+                if (posremover == -1){
+                    System.out.println("Produto não encontrado.");
+                }else{
+                    for (int i =posremover;i<qtd-1;i++){
+                        produtos[i] = produtos[i+1];
+                        quantidade[i] = quantidade[i+1];
+                    }
+                    produtos[qtd -1]=null;
+                    quantidade[qtd- 1]=0;
+                    qtd--;
+                    System.out.println("Removido com sucesso!");
+                }
             break;
         
             case 6:
+                System.out.println("Encerrando.");
             
             break;
         
@@ -86,7 +130,7 @@ public class AtividadeArray {
         
 
         }
-        sc.close();
-        }
     }
+    sc.close();
+}
 }

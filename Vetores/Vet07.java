@@ -40,7 +40,7 @@ public class Vet07 {
         int posremover = sc.nextInt();
 
         if (posremover >=0 && posremover<nomes.length){
-            for(int i =posremover;i<nomes.length;i++){
+            for(int i =posremover;i<nomes.length-1;i++){
                 nomes[i]=nomes[i+1];
             }
             nomes[nomes.length-1]=null;

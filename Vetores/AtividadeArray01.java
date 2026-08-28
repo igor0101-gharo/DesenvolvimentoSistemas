@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class AtividadeArray01 {
     public static void main(String[] args) {
-         Scanner sc = new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
         int escolha = 98;
 
         String[] produtos = new String[5];
@@ -12,6 +12,7 @@ public class AtividadeArray01 {
 
 
         while (escolha !=6) {
+        
         System.out.println("===MENU===");    
         System.out.println("1-Cadastrar Produto");    
         System.out.println("2-Listar Produtos");    
@@ -75,7 +76,6 @@ public class AtividadeArray01 {
                 }
                 break;
             case 5:
-                posremover = -1;
                 System.out.println("Digite o nome do produto: ");
                 nome_produto = sc.next();
                 for (int i=0;i<produtos.length;i++){
@@ -84,7 +84,7 @@ public class AtividadeArray01 {
                     }
                 }
                 if(posremover!=-1){
-                    for(int i = posremover; i<produtos.length;i++){
+                    for(int i = posremover; i<produtos.length-1;i++){
                         produtos[i] = produtos[i+1];
                         qtd[i] = qtd[i+1];
                     }
@@ -92,6 +92,7 @@ public class AtividadeArray01 {
                     qtd[qtd.length-1] = -1;
                     System.out.println("Item removido com sucesso.");
                 }
+                posremover = -1;
                 break;
             case 6:
                 System.out.println("Encerrando.");
