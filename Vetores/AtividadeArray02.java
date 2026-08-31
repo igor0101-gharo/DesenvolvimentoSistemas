@@ -5,10 +5,15 @@ public class AtividadeArray02 {
         Scanner sc = new Scanner(System.in);
         int escolha = 98;
         String[] quartos = new String[5];
-        int[] camas = new int[5];
-        String[] hospedes = new String[5];
+        int[] camas = {0,0,0,0,0};
+        String[] reservashospede = new String[25];
+        int[] reservasquarto = new int[25];
+        for (int i = 0;i<reservasquarto.length;i++){
+            reservasquarto[i] = -1;
+        }
         int tam = 5;
         int qtd = 0;
+        int qtd_reservas= 0;
 
 
 
@@ -49,21 +54,87 @@ public class AtividadeArray02 {
                     }
                     break;
                 case 3:
-                    System.out.println("Digite o número do quarto: ");
-                    String reserva_quarto = sc.next();
-                    for (int i=0;i<5;i++){
-                        
+                    if (qtd_reservas == 25){
+                        System.out.println("Número limite de reservas atingindo");
+                    }else{
+
+                        System.out.println("Digite o número do quarto: ");
+                        String reserva_quarto = sc.next();
+                        int posreserva = -1;
+                        for (int i=0;i<5;i++){
+                            if (reserva_quarto.equalsIgnoreCase(quartos[i])){
+                                posreserva = i;
+                            }
+                        }
+                            if (posreserva == -1){
+                                System.out.println("Este quarto não existe.");
+                            }else{
+                                if (camas[posreserva] == 0){
+                                    System.out.println("Não há camas disponíveis.");
+                                }else{
+                                    System.out.println("Digite o nome do hospede: ");
+                                    reservashospede[qtd_reservas] = sc.next();
+                                    reservasquarto[qtd_reservas] = posreserva;
+                                    camas[posreserva] = camas[posreserva] - 1;
+                                    qtd_reservas += 1;
+                                    System.out.println("Reversa realizada com sucesso.");
+    
+    
+    
+                                }   
+    
+                            }
+                            
                     }
                     
                     break;
                 case 4:
+                    System.out.println("Informe o número do quarto: ");
+                    String escolhaquarto = sc.next();
+                    int quartopos = -1;
+                    int qtdRquarto = 0;
+                    for (int i= 0;i<quartos.length;i++){
+                        if (escolhaquarto.equalsIgnoreCase(quartos[i])){
+                            quartopos = i;
+                            for (int j = 0;j<reservasquarto.length;j++){
+                                if(quartopos == reservasquarto[j]){
+                                    qtdRquarto += 1;
+                                }
+                            }
+                        }
+                    }
+
+                    if (quartopos == -1){
+                        System.out.println("O quarto não existe:");
+                    }else if (qtdRquarto == 0){
+                        System.out.println("Não há reservas para este quarto.");
+                    }else{
+                        System.out.println("===RESERVAS PARA ESTE QUARTO===");
+                        for (int i = 0;i<reservasquarto.length;i++){
+                            if (quartopos == reservasquarto[i]){
+                                System.out.println("QUARTO "+quartos[quartopos]+ "| hospede: "+reservashospede[i]);
+
+                            }
+                        }
+
+                    }
+
+
                     
                     break;
                 case 5:
+                    System.out.println("Informe o nome do hospede: ");
+                    String escolhahospede = sc.next();
+                    System.out.println("===RESERVAS FEITAS POR ESSE HOSPEDE===");
+                    for (int i =0;i<reservashospede.length;i++){
+                        if (escolhahospede.equalsIgnoreCase(reservashospede[i])){
+                            System.out.println("QUARTO "+quartos[reservasquarto[i]]+" Reservado");
+                        }
+                    }
                     
                     break;
                 case 6:
-                    
+                    System.out.println("Encerrando.");
                     break;
             
                 default:
