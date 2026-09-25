@@ -1,6 +1,6 @@
 
 
-public class ProdutoFisico extends Produto implements Venda {
+public class ProdutoFisico extends Produto {
 
 
     public ProdutoFisico(String codigo, String nome, double preco) {
@@ -12,6 +12,7 @@ public class ProdutoFisico extends Produto implements Venda {
 
     }
 
+    
     public void venda(double valor, int quantidade,double frete){
         System.out.printf("Venda realizada\nValor total: R$%.2f",(valor*quantidade+frete));
     }

@@ -1,4 +1,4 @@
-public class ProdutoDigital extends Produto implements Venda {
+public class ProdutoDigital extends Produto {
 
     public ProdutoDigital(String codigo, String nome, double preco) {
         super(codigo, nome, preco);

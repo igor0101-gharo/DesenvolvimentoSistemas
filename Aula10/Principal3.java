@@ -7,7 +7,10 @@ public class Principal3 {
         String nome;
         String codigo;
         double preco;
+        double frete;
         int index;
+        int quantidade;
+        double desconto;
         ArrayList<Produto>listaProdutos = new ArrayList<>();
         int op;
         int op2;
@@ -111,15 +114,75 @@ public class Principal3 {
                             }
                         }
 
+                        if(!encontrado){
+                            System.out.println("Não foi encontrado produto com esse nome.");
+                        }else{
+                            System.out.println("Digite a quantidade que deseja vender.");
+                            quantidade = sc.nextInt();
+
+                            if(listaProdutos.get(index) instanceof ProdutoFisico){
+                                System.out.println("Digite o valor do frete:");
+                                frete = sc.nextDouble();
+                                listaProdutos.get(index).venda(listaProdutos.get(index).getPreco(),quantidade,frete);
+                            }else{
+                                listaProdutos.get(index).venda(listaProdutos.get(index).getPreco(),quantidade);
+                            }
+
+
+                        }
+
                     }
                     
                     break;
             
                 case 4:
+                    if (listaProdutos.isEmpty()){
+                        System.out.println("Não há produtos cadastrados.");
+                    }else{
+                        System.out.println("Digite o nome do produto que quer vender:");
+                        nome = sc.next();
+                        encontrado = false;
+                        index = -1;
+
+                        for (int i=0;i<listaProdutos.size();i++){
+                            if(listaProdutos.get(i).getNome().equalsIgnoreCase(nome)){
+                                encontrado = true;
+                                index = i;
+                            }
+                        }
+                        if(!encontrado){
+                            System.out.println("Não foi encontrado produto com esse nome.");
+                        }else{
+                            System.out.println("Digite a quantidade que deseja vender.");
+                            quantidade = sc.nextInt();
+                            System.out.println("Digite o valor da porcentagem do desconto (0 a 100):");
+                            desconto = sc.nextDouble();
+
+                            if (desconto<0 || desconto > 100){
+                                System.out.println("valor inválido.");
+                                break;
+                            }else{
+                                desconto = 1 - (desconto/100) ;
+                            }
+
+                            if(listaProdutos.get(index) instanceof ProdutoFisico){
+                                System.out.println("Digite o valor do frete:");
+                                frete = sc.nextDouble();
+                                listaProdutos.get(index).venda(listaProdutos.get(index).getPreco(),quantidade,frete,desconto);
+                            }else{
+                                listaProdutos.get(index).venda(listaProdutos.get(index).getPreco(),quantidade,desconto);
+                            }
+
+
+                        }
+
+
+                    }
                     
                     break;
             
                 case 0:
+                    System.out.println("Saindo....");
                     
                     break;
             

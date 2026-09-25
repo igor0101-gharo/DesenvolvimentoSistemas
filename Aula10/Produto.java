@@ -1,6 +1,6 @@
 
 
-public class Produto {
+public class Produto implements Venda {
     private String codigo;
     private String nome;
     private double preco;
@@ -10,6 +10,17 @@ public class Produto {
         this.preco = preco;
     }
 
+    @Override 
+    public void venda(double valor, int quantidade){
+        
+    }
+    public void venda(double valor, int quantidade, double frete){
+
+    }
+    
+    public void venda(double valor, int quantidade, double frete, double desconto){
+
+    }
     
     public String getCodigo() {
         return codigo;
