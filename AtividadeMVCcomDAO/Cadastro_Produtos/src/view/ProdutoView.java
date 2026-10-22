@@ -4,6 +4,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -12,6 +13,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.Locale;
 
 
 import controle.ProdutoControle;
@@ -58,6 +60,7 @@ public class ProdutoView extends JFrame {
         setLayout(new BorderLayout(10,10));
 
         criarinterface();
+        ConfigurarEventos();
     }
 
     //cria os componentes da interface
@@ -206,9 +209,9 @@ public class ProdutoView extends JFrame {
 
     private void ConfigurarEventos(){
 
-        //btnCadastrar.addActionListener();
-        //btnBuscar.addActionListener();
-       // btnAlterar.addActionListener();
+        btnCadastrar.addActionListener(e -> cadastrar());
+        btnBuscar.addActionListener(e -> buscar());
+        btnAlterar.addActionListener(e-> alterar());
        // btnExcluir.addActionListener();
        // btnListar.addActionListener();
        // btnLimpar.addActionListener();
@@ -284,7 +287,7 @@ public class ProdutoView extends JFrame {
         try{
             double preco = Double.parseDouble(txtPreco.getText().trim().replace(",", "."));
             
-            if (Double.isFinite(preco) || preco < 0) {
+            if (!Double.isFinite(preco) || preco < 0) {
                 throw new NumberFormatException();
             }
 
@@ -293,8 +296,129 @@ public class ProdutoView extends JFrame {
             throw new IllegalArgumentException("Informe um valor válido");
         }
     }
+     private void mostrarMensagem(String mensagem) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                mensagem,
+                "Informação",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+    }
+
+        // MENSAGEM DE ERRO
+    private void mostrarErro(String mensagem) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                mensagem,
+                "Erro",
+                JOptionPane.ERROR_MESSAGE
+        );
+    }
+
+    private  void atualizarTabela(){
+        modeloTabela.setRowCount(0);
+
+        for(Produto produto : controleP.listaProdutos()){
+            modeloTabela.addRow(new Object[]{
+                produto.getId(),
+                produto.getNome(),
+                produto.getCategoria(),
+                String.format(Locale.forLanguageTag("pt-BR"), "%.2f",produto.getPreco()),
+                String.format(Locale.forLanguageTag("pt-BR"),  "%d",produto.getQuantidade()
+            )
+            });
+        }
+    }
+
+    private void limparCampos(){
+        tabela.clearSelection();
+
+        txtId.setText("");
+        txtNome.setText("");
+        txtCategoria.setText("");
+        txtPreco.setText("");
+        txtQuantidade.setText("");
+
+        txtId.requestFocusInWindow();
+    }
 
 
+
+
+    private void cadastrar(){
+
+        try{
+            int id = lerId();
+            String nome = lerNome();
+            String categoria = lerCategoria();
+            double preco = lerPreco();
+            int quantidade = lerQuantidade();
+
+
+            if(controleP.buscar(id) != null) {
+                mostrarMensagem("Id já cadastrado");
+                return;
+            }
+
+            controleP.cadastrarProduto(id, nome, categoria, preco, quantidade);
+            mostrarMensagem("Produto cadastrado com sucesso!");
+
+            atualizarTabela();
+            limparCampos();
+        }catch(IllegalArgumentException ex){
+            mostrarErro(ex.getMessage());
+        }
+
+
+    }
+
+    private void buscar(){
+        try{
+            int id = lerId();
+
+            Produto produto = controleP.buscar(id);
+
+            if (produto != null) {
+                txtNome.setText(produto.getNome());
+                txtCategoria.setText(produto.getCategoria());
+                txtPreco.setText(String.valueOf(produto.getPreco()));
+                txtQuantidade.setText(String.valueOf(produto.getQuantidade()));
+
+                mostrarMensagem("Produto encontrado!");
+            }else{
+                mostrarMensagem("Produto não encontrado");
+            }
+        }catch(IllegalArgumentException ex){
+            mostrarErro(ex.getMessage());
+        }
+    }
+
+
+    private void alterar(){
+        try{
+
+            int id = lerId();
+            String nome = lerNome();
+            String categoria = lerCategoria();
+            double preco = lerPreco();
+            int quantidade = lerQuantidade();
+
+            boolean alterado = controleP.alterar(id, nome, categoria, preco, quantidade);
+
+            if(alterado){
+
+                mostrarMensagem("Produto alterado com sucesso!");
+                atualizarTabela();
+                limparCampos();
+            }else{
+                mostrarErro("Produto não encontrado");
+            }
+        }catch(IllegalArgumentException ex){
+            mostrarErro(ex.getMessage());
+        }
+    }
 
     
 }
