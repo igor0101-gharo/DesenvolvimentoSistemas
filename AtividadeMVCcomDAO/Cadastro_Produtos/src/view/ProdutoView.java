@@ -11,6 +11,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.Locale;
@@ -45,6 +46,7 @@ public class ProdutoView extends JFrame {
     private JButton btnListar;
     private JButton btnLimpar;
     private JButton btnLogin;
+    private JButton btnUsuario;
 
     //TABELAS
     private JTable tabela;
@@ -59,10 +61,86 @@ public class ProdutoView extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10,10));
 
-        criarinterface();
-        ConfigurarEventos();
+        interfaceLogin();
+        ConfigurarUsuario();
+        
     }
 
+
+    private void interfaceLogin(){
+        //TITULO
+        JLabel titulo = new JLabel(
+            "GERENCIAMENTO DE PRODUTOS:LOGIN",
+            SwingConstants.CENTER
+        );
+
+        titulo.setFont(new Font("Arial", Font.BOLD, 22));
+        titulo.setForeground(Color.WHITE);
+        titulo.setOpaque(true);
+        titulo.setBackground(new Color(30, 60 , 100));
+        titulo.setBorder(
+            BorderFactory.createEmptyBorder(15,10,15,10)
+        );
+
+        add(titulo,BorderLayout.NORTH);
+
+        //PAINEL PRINCIPAL
+            JPanel painelPrincipal = new JPanel(new BorderLayout(10,10));
+
+            painelPrincipal.setBorder(BorderFactory.createEmptyBorder(10,15,15,15));
+
+
+        add(painelPrincipal,BorderLayout.CENTER);
+
+         //Painel de cadastro
+        JPanel painelCadastro = new JPanel(new GridBagLayout());
+
+        painelCadastro.setBorder(BorderFactory.createTitledBorder("Dados do produto"));
+
+        GridBagConstraints gbc  = new GridBagConstraints();
+
+        gbc.insets = new Insets(8, 8, 8, 8);
+        gbc.anchor = GridBagConstraints.WEST;
+
+
+        //Login
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+
+        painelCadastro.add(new JLabel("Login"),gbc);
+
+        txtLogin = new JTextField(15);
+
+        gbc.gridx = 1;
+        painelCadastro.add(txtLogin,gbc);
+        //Senha
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+
+        painelCadastro.add(new JLabel("Senha"),gbc);
+
+        txtSenha = new JTextField(15);
+
+        gbc.gridx = 1;
+        painelCadastro.add(txtSenha,gbc);
+
+        painelPrincipal.add(painelCadastro,BorderLayout.CENTER);
+        //Botões
+        JPanel painelBotoes = new JPanel(new FlowLayout());
+
+        btnLogin = new JButton("Entrar");
+        btnUsuario = new JButton("Cadastrar");
+
+        painelBotoes.add(btnLogin);
+        painelBotoes.add(btnUsuario);
+
+        painelPrincipal.add(painelBotoes, BorderLayout.SOUTH);
+
+
+        
+
+
+    }
     //cria os componentes da interface
     private void criarinterface(){
         //TITULO
@@ -212,9 +290,9 @@ public class ProdutoView extends JFrame {
         btnCadastrar.addActionListener(e -> cadastrar());
         btnBuscar.addActionListener(e -> buscar());
         btnAlterar.addActionListener(e-> alterar());
-       // btnExcluir.addActionListener();
-       // btnListar.addActionListener();
-       // btnLimpar.addActionListener();
+        btnExcluir.addActionListener(e -> excluir());
+        btnListar.addActionListener(e -> atualizarTabela());
+        btnLimpar.addActionListener(e -> limparCampos());
 
         tabela.getSelectionModel().addListSelectionListener(e -> {
             if(!e.getValueIsAdjusting() && tabela.getSelectedRow() != -1){
@@ -230,6 +308,12 @@ public class ProdutoView extends JFrame {
         });
 
         
+    }
+
+    private void ConfigurarUsuario(){
+        btnLogin.addActionListener(e -> fazerLogin());
+        btnUsuario.addActionListener(e -> criarUsusario());
+
     }
 
 
@@ -252,6 +336,24 @@ public class ProdutoView extends JFrame {
             throw new IllegalArgumentException("Informe a categoria do produto");
         }
         return categoria;
+    }
+    private String lerLogin() {
+
+        String login = txtLogin.getText().trim();
+
+        if (login.isEmpty()){
+            throw new IllegalArgumentException("Informe a login do produto");
+        }
+        return login;
+    }
+    private String lerSenha() {
+
+        String senha = txtSenha.getText().trim();
+
+        if (senha.isEmpty()){
+            throw new IllegalArgumentException("Informe a senha do produto");
+        }
+        return senha;
     }
     
     private int lerId() {
@@ -296,7 +398,12 @@ public class ProdutoView extends JFrame {
             throw new IllegalArgumentException("Informe um valor válido");
         }
     }
-     private void mostrarMensagem(String mensagem) {
+
+
+
+
+
+    private void mostrarMensagem(String mensagem) {
 
         JOptionPane.showMessageDialog(
                 this,
@@ -340,8 +447,18 @@ public class ProdutoView extends JFrame {
         txtCategoria.setText("");
         txtPreco.setText("");
         txtQuantidade.setText("");
+        txtLogin.setText("");
+        txtSenha.setText("");
 
         txtId.requestFocusInWindow();
+    }
+    private void limparCamposUsuario(){
+
+        
+        txtLogin.setText("");
+        txtSenha.setText("");
+
+        txtLogin.requestFocusInWindow();
     }
 
 
@@ -420,5 +537,98 @@ public class ProdutoView extends JFrame {
         }
     }
 
+    private void excluir(){
+        try{
+            int id = lerId();
+
+            Produto produto = controleP.buscar(id);
+
+            if (produto == null){
+                mostrarMensagem("Produto não encontrado");
+                return ;
+
+            }
+
+            int opcao = JOptionPane.showConfirmDialog(
+                this,
+                "Deseja realmente excluir o produto?",
+                "Confirmar Exclusão",
+                JOptionPane.YES_NO_OPTION
+            );
+
+            if (opcao == JOptionPane.YES_OPTION) {
+                boolean removido = controleP.remover(id);
+
+                if(removido){
+                    mostrarMensagem("produto excluído com sucesso");
+
+                    atualizarTabela();
+                    limparCampos();
+
+                }
+            }
+
+        }catch(IllegalArgumentException ex){
+            mostrarErro(ex. getMessage());
+        }
+    }
+
+
+    private void criarUsusario(){
+        try{
+            String login = lerLogin();
+            String senha = lerSenha();
+
+            if(controleU.buscar(login) != null){
+                mostrarMensagem("Usuario já existe");
+                return;
+            }
+
+            controleU.cadastrarUsuario(login, senha);
+            mostrarMensagem("Usuário cadastrado com sucesso");
+        }catch(IllegalArgumentException ex){
+            mostrarErro(ex.getMessage());
+        }
+
+        limparCamposUsuario();
+    }
+
+    private boolean  fazerLogin(){
+        try{
+            String login = lerLogin();
+            String senha = lerSenha();
+
+            if(controleU.buscar(login) != null){
+                boolean acesso = controleU.fazerLogin(login, senha);
+                
+                if (acesso){
+                    getContentPane().removeAll();
+                    criarinterface();
+                    ConfigurarEventos();
+                    revalidate();
+                    repaint();
+
+                    return true;
+                }else{
+                    mostrarErro("Senha incorreta");
+                    return false;
+                }
+            }else{
+                mostrarErro("Usuário não encontrado");
+                return false;
+            }
+        }catch(IllegalArgumentException ex){
+            mostrarErro(ex.getMessage());
+            return false;
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() ->{
+            ProdutoView tela = new ProdutoView();
+
+            tela.setVisible(true);
+        });
+    }
     
 }
