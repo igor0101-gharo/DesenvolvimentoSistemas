@@ -1,0 +1,36 @@
+package eletrodomestico.controle;
+
+import java.util.ArrayList;
+
+import eletrodomestico.dao.EletrodomesticoDAO;
+import eletrodomestico.modelo.Eletrodomestico;
+
+public class EletrodomesticoControle {
+    private EletrodomesticoDAO dao;
+
+    public EletrodomesticoControle(){
+        dao = new EletrodomesticoDAO();
+    }
+
+    public boolean cadastrar(int id , String nome,String marca, String voltagem, double preco){
+        Eletrodomestico eletrodomestico = new Eletrodomestico(id, nome, marca, voltagem, preco);
+        return dao.cadastrar(eletrodomestico);
+    }
+
+
+    public ArrayList<Eletrodomestico> listar(){
+        return dao.listar();
+    }
+
+    public Eletrodomestico buscar(int id){
+        return dao.buscar(id);
+    }
+
+    public  boolean alterar(int id, String nome, String marca, String voltagem, double preco){
+        return dao.alterar(id, nome, marca, voltagem, preco);
+    }
+
+    public boolean remover(int id){
+        return dao.remover(id);
+    }
+}

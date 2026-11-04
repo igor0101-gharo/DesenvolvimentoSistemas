@@ -11,7 +11,7 @@ import eletrodomestico.modelo.Eletrodomestico;
 
 public class EletrodomesticoDAO {
     
-    public boolean cadastrar(Eletrodomestico eletrodomestico){
+public boolean cadastrar(Eletrodomestico eletrodomestico){
         String sql = "INSERT INTO eletrodomestico(nome,marca,voltagem,preco)VALUES(?,?,?,?)";
 
         try(Connection conexao = Conexao.conectar();
@@ -82,6 +82,7 @@ PreparedStatement comando=conexao.prepareStatement(sql)){
     comando.setString(2,marca);
     comando.setString(3, voltagem);
     comando.setDouble(4, preco);
+    comando.setInt(5, id);
     return comando.executeUpdate()>0;
 }catch(SQLException e){
     System.out.println("Erro ao alterar "+e.getMessage());
@@ -89,4 +90,17 @@ PreparedStatement comando=conexao.prepareStatement(sql)){
 }
 }
 
+
+public boolean remover(int id){
+    String sql ="DELETE FROM eletrodomestico WHERE id =?";
+
+    try(Connection conexao=Conexao.conectar();
+PreparedStatement comando=conexao.prepareStatement(sql)){
+    comando.setInt(1, id);
+    return comando.executeUpdate()>0;
+}catch(SQLException e){
+    System.out.println("Erro ao remover"+e.getMessage());
+    return false;
+}
+}
 }

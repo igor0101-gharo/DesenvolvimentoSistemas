@@ -1,7 +1,10 @@
 package eletrodomestico;
 
+import eletrodomestico.view.EletrodomesticoView;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        EletrodomesticoView view  = new EletrodomesticoView();
+        view.menu();
     }
 }
