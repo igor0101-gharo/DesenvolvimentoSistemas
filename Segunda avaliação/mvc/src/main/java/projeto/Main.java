@@ -1,7 +1,10 @@
 package projeto;
 
+import projeto.view.FuncionarioView;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        FuncionarioView view = new FuncionarioView();
+        view.menu();
     }
 }

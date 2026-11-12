@@ -1,6 +1,6 @@
 package projeto.view;
 
-import javax.print.attribute.standard.JobHoldUntil;
+
 import javax.swing.JOptionPane;
 
 import projeto.controle.FuncionarioControle;
@@ -35,6 +35,11 @@ public class FuncionarioView {
             }
         }catch(NumberFormatException e){
             JOptionPane.showMessageDialog(null,"O valor digitado não é um número inteiro" );
+            return ;
+        }
+
+        if (controle.buscar(matricula) != null){
+            JOptionPane.showMessageDialog(null, "Já há um funcionário com essa matrícula, encerrando o processo.");
             return ;
         }
 
@@ -120,6 +125,11 @@ public class FuncionarioView {
             return ;
         }
 
+        if (controle.buscar(matricula) != null){
+            JOptionPane.showMessageDialog(null, "Já há um funcionário com essa matrícula, encerrando o processo.");
+            return ;
+        }
+
 
         String nome = JOptionPane.showInputDialog(null,
             "Digite o nome do funcionário para cadastro.",
@@ -185,7 +195,7 @@ public class FuncionarioView {
         String lista = "Funcionários cadastrados: \n\n";
         for(Funcionario funcionario : controle.listar()){
             
-                lista += funcionario + "\n";
+                lista += funcionario + "\n\n";
             }
 
             JOptionPane.showMessageDialog(null, lista,"Lista de funcionários",JOptionPane.INFORMATION_MESSAGE);
@@ -194,7 +204,12 @@ public class FuncionarioView {
 
 
     private void alterar(){
-         String numero = JOptionPane.showInputDialog(null,
+        if (controle.listar().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Nenhum funcionário cadastrado.");
+            return ;
+        }
+
+        String numero = JOptionPane.showInputDialog(null,
             "Digite a matrícula para alteração.",
             "Alteração:Matrícula",
             JOptionPane.QUESTION_MESSAGE
@@ -299,7 +314,149 @@ public class FuncionarioView {
         }
     }
 
+    private void buscar(){
+        if(controle.listar().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Nenhum funcionário cadastrado.");
+        }else{
+            String numero = JOptionPane.showInputDialog(null,
+            "Digite a matrícula para Busca.",
+            "Busca:Matrícula",
+            JOptionPane.QUESTION_MESSAGE
+        );
+        
+        if (numero == null || numero.trim().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Campo vazio detectado, encerrando operação");
+            return ;
+        }
 
+        try{
+            matricula = Integer.parseInt(numero);
+            if (matricula<0){
+                JOptionPane.showMessageDialog(null, "matricula inválida");
+                return ;
+            }
+        }catch(NumberFormatException e){
+            JOptionPane.showMessageDialog(null,"O valor digitado não é um número inteiro" );
+            return ;
+        }
+
+        Funcionario funcionario = controle.buscar(matricula);
+
+        if (funcionario == null){
+            JOptionPane.showMessageDialog(null, "Não há funcionário com esta matrícula");
+        }else{
+            JOptionPane.showMessageDialog(null,"Funcionário:\n" +funcionario);
+        }
+        }
+    }
+
+    private void excluir(){
+        if (controle.listar().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Nenhum funcionário cadastrado.");
+        }else{
+            String numero = JOptionPane.showInputDialog(null,
+            "Digite a matrícula do funcionário que deseja excluir.",
+            "Exclusão:Matrícula",
+            JOptionPane.QUESTION_MESSAGE
+        );
+        
+        if (numero == null || numero.trim().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Campo vazio detectado, encerrando operação");
+            return ;
+        }
+
+        try{
+            matricula = Integer.parseInt(numero);
+            if (matricula<0){
+                JOptionPane.showMessageDialog(null, "matricula inválida");
+                return ;
+            }
+        }catch(NumberFormatException e){
+            JOptionPane.showMessageDialog(null,"O valor digitado não é um número inteiro" );
+            return ;
+        }
+
+        Funcionario funcionario = controle.buscar(matricula);
+
+        if (funcionario == null){
+            JOptionPane.showMessageDialog(null, "Não há funcionário cadastrado com essa matrícula.");
+        }
+
+        int resposta = JOptionPane.showConfirmDialog(null, "funcionário encontrado\n"+
+            funcionario +"\nDeseja prosseguir com a exclusão?", "Confirmar exclusão.",JOptionPane.YES_NO_OPTION
+        );
+
+        if(resposta == JOptionPane.YES_OPTION){
+            if(controle.remover(matricula)){
+                JOptionPane.showMessageDialog(null, "funcionário removido com sucesso");
+            }else{
+                JOptionPane.showMessageDialog(null, "Não foi possível remover o funcionário");
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "Operação cancelada.");
+        }
+        }
+    }
+
+
+    public void menu(){
+        boolean executando = true;
+
+        while (executando) {
+            String opcao = JOptionPane.showInputDialog(null,
+                "Escolha uma opção:\n"+
+                "1-Cadastrar Operador\n"+
+                "2-Cadastrar Gerente\n"+
+                "3-Listar todos os funcionários\n"+
+                "4-Buscar um funcionário\n"+
+                "5-Alterar informações de um funcionário\n"+
+                "6-Excluir um funcionário\n"+
+                "0-Sair", "Menu Principal",JOptionPane.QUESTION_MESSAGE
+            );
+
+            if(opcao == null){
+                JOptionPane.showMessageDialog(null, "Operação cancelada");
+                break;
+            }
+
+            switch (opcao) {
+                case "1":
+                    cadastrarOperador();
+                    
+                    break;
+            
+                case "2":
+                    cadastrarGerente();
+                    break;
+            
+                case "3":
+                    listar();
+                    break;
+            
+                case "4":
+                    buscar();
+                    break;
+            
+                case "5":
+                    alterar();
+                    break;
+            
+                case "6":
+                    excluir();
+                    break;
+            
+                case "0":
+                    JOptionPane.showMessageDialog(null, "Encerrando");
+                    executando = false;
+                    break;
+            
+                default:
+                    JOptionPane.showMessageDialog(null, "Opção inválida.");
+                    break;
+            }
+
+        }
+    }
 
    }
 

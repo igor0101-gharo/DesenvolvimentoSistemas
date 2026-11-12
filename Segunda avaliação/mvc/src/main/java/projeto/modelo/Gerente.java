@@ -21,6 +21,6 @@ public class Gerente extends Funcionario{
 
         @Override 
     public String toString() {
-        return "Tipo: Gerente\nmatrícula: "+getMatricula() +"nome: "+ getNome()+ "\nIdade: "+getIdade()+ "\ndepartaemnto:" +departamento;
+        return "-Tipo: Gerente\nmatrícula: "+getMatricula() +"\nnome: "+ getNome()+ "\nIdade: "+getIdade()+ "\ndepartamento: " +departamento;
     }
 }

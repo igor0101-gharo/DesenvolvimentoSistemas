@@ -22,7 +22,7 @@ public class Operador extends Funcionario{
 
     @Override 
     public String toString() {
-        return "Tipo: Operador\nmatrícula: "+getMatricula()+"\nnome: "+ getNome()+ "\nIdade: "+getIdade()+"\nfuncao: "+funcao;
+        return "-Tipo: Operador\nmatrícula: "+getMatricula()+"\nnome: "+ getNome()+ "\nIdade: "+getIdade()+"\nfunção: "+funcao;
     }
 
 }
